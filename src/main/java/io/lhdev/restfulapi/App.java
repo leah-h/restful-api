@@ -1,3 +1,5 @@
+package io.lhdev.restfulapi;
+
 import io.javalin.Javalin;
 
 import java.sql.*;
