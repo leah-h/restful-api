@@ -4,19 +4,19 @@ public class Account {
 
     private Long id;
     private Long clientId;
-    private float balance;
+    private double balance;
 
     public Account() {
         super();
     }
 
-    public Account(Long id, Long clientId, float balance) {
+    public Account(Long id, Long clientId, double balance) {
         this.id = id;
         this.clientId = clientId;
         this.balance = balance;
     }
 
-    public Account(Long clientId, float balance) {
+    public Account(Long clientId, double balance) {
         this.clientId = clientId;
         this.balance = balance;
     }
@@ -37,11 +37,11 @@ public class Account {
         this.clientId = clientId;
     }
 
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
