@@ -2,26 +2,26 @@ package io.lhdev.restfulapi;
 
 import io.javalin.Javalin;
 
-import java.sql.*;
+import io.lhdev.restfulapi.controller.AccountController;
+import io.lhdev.restfulapi.controller.ClientController;
+import io.lhdev.restfulapi.controller.Controller;
 
 public class App {
 
-    public static void main(String[] args) throws SQLException {
-        Javalin app = Javalin.create().start(7000);
-        app.get("/", ctx -> ctx.result("Welcome to RESTful API"));
+    private static Javalin app;
 
-        //create connection for a server installed in localhost, with a user "root" with no password
-        try (Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost/", "root", "leahh")) {
-            // create a Statement
-            try (Statement stmt = conn.createStatement()) {
-                //execute query
-                try (ResultSet rs = stmt.executeQuery("SELECT 'Connected to mariadb!'")) {
-                    //position result to first
-                    rs.first();
-                    System.out.println(rs.getString(1)); //result is "Hello World!"
-                }
-            }
-            }
+    public static void main(String[] args) {
+        app = Javalin.create();
+
+        mapControllers(new ClientController(), new AccountController());
+
+        app.start(7000);
+    }
+
+    public static void mapControllers(Controller... controllers){
+        for (Controller c: controllers){
+            c.mapEndpoints(app);
+        }
     }
 
 

@@ -1,24 +1,11 @@
-package io.lhdev.restfulapi.controller;
-
-import io.javalin.Javalin;
-import io.javalin.http.Handler;
-import io.lhdev.restfulapi.model.Client;
-import io.lhdev.restfulapi.model.ClientRepository;
-import io.lhdev.restfulapi.service.ClientService;
+package io.lhdev.restfulapi.model;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class ClientController implements Controller{
+public class ClientRepository {
 
-    private ClientService clientService;
-
-    public ClientController() {
-        this.clientService = new ClientService();
-    }
-
-    private Handler getAllClients = ctx -> {
+    public List<Client> getAllClients() {
         List<Client> clients = Arrays.asList(
                 new Client(1L,
                         12345L,
@@ -35,15 +22,7 @@ public class ClientController implements Controller{
                         "404-456-7890",
                         "564 Peachtree Rd. Atlanta, GA 30312")
         );
-        ctx.json(clients);
-    };
-
-
-
-    @Override
-    public void mapEndpoints(Javalin app) {
-        app.get("/api/v1/clients", getAllClients);
+        return clients;
     }
+
 }
-
-
