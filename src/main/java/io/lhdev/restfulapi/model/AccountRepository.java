@@ -20,11 +20,9 @@ public class AccountRepository {
     }
 
     public Account getAccountById(Long id) {
-        if () {
-            return new Account(
-                    5432L,
-                    1L,
-                    5000.00);
-        };
+                return new Account(
+                        5432L,
+                        1L,
+                        5000.00);
     }
 }
