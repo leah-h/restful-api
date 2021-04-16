@@ -1,40 +1,39 @@
 package io.lhdev.restfulapi.model;
 
+import java.util.Objects;
+
 public class Account {
 
-    private Long id;
-    private Long clientId;
+    public int id;
+    private String type;
     private double balance;
+    private int clientId;
 
     public Account() {
         super();
     }
 
-    public Account(Long id, Long clientId, double balance) {
+    public Account(int id, String type, double balance, int clientId) {
         this.id = id;
-        this.clientId = clientId;
+        this.type = type;
         this.balance = balance;
+        this.clientId = clientId;
     }
 
-    public Account(Long clientId, double balance) {
-        this.clientId = clientId;
-        this.balance = balance;
-    }
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getClientId() {
-        return clientId;
+    public String getType() {
+        return type;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public double getBalance() {
@@ -45,12 +44,34 @@ public class Account {
         this.balance = balance;
     }
 
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
-                ", clientId=" + clientId +
+                ", type='" + type + '\'' +
                 ", balance=" + balance +
+                ", clientId=" + clientId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return id == account.id && Double.compare(account.balance, balance) == 0 && clientId == account.clientId && type.equals(account.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, balance, clientId);
     }
 }

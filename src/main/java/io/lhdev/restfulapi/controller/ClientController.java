@@ -19,30 +19,34 @@ public class ClientController implements Controller{
     }
 
     private Handler getAllClients = ctx -> {
-        List<Client> clients = Arrays.asList(
-                new Client(1L,
-                        12345L,
-                        "Joe",
-                        "Smith",
-                        "joe.smith@test.com",
-                        "123-456-7890",
-                        "123 Fake St. Atlanta, GA 30307"),
-                new Client(2L,
-                        54321L,
-                        "Jane",
-                        "Doe",
-                        "jane.doe@test.com",
-                        "404-456-7890",
-                        "564 Peachtree Rd. Atlanta, GA 30312")
-        );
-        ctx.json(clients);
+//        List<Client> clients = Arrays.asList(
+//                new Client(1L,
+//                        12345L,
+//                        "Joe",
+//                        "Smith",
+//                        "joe.smith@test.com",
+//                        "123-456-7890",
+//                        "123 Fake St. Atlanta, GA 30307"),
+//                new Client(2L,
+//                        54321L,
+//                        "Jane",
+//                        "Doe",
+//                        "jane.doe@test.com",
+//                        "404-456-7890",
+//                        "564 Peachtree Rd. Atlanta, GA 30312")
+//        );
+
+
+
+//
+//        ctx.json(listOfClients);
     };
 
 
 
     @Override
     public void mapEndpoints(Javalin app) {
-        app.get("/api/v1/clients", getAllClients);
+        app.get("/clients", getAllClients);
     }
 }
 

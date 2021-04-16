@@ -1,47 +1,59 @@
 package io.lhdev.restfulapi.controller;
 
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.lhdev.restfulapi.model.Account;
+import io.lhdev.restfulapi.model.AccountRepository;
 import io.lhdev.restfulapi.model.Client;
 import io.lhdev.restfulapi.service.AccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountController implements Controller{
 
-    private AccountService accountService;
+    private Logger logger = LoggerFactory.getLogger(AccountController.class);
+    private static AccountService accountService;
 
     public AccountController() {
         this.accountService = new AccountService();
     }
 
+    List<Account> accounts = Arrays.asList(
+            new Account(5432,
+                    "Checking",
+                    5000.00,
+                    1),
+            new Account(6789,
+                    "Savings",
+                    556.00,
+                    2)
+    );
+
     private Handler getAllAccounts = ctx -> {
-        List<Account> accounts = Arrays.asList(
-                new Account(5432L,
-                        1L,
-                        5000.00),
-                new Account(6789L,
-                        345L,
-                        556.00)
-        );
         ctx.json(accounts);
     };
 
-    private Handler getAccountById = ctx -> {
-        String id = ctx.pathParam("id");
 
-       Account account = accountService.getAccountById(id);
+    public static Handler getAccountById = ctx-> {
+//        int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
+//        AccountService service = AccountService.intance();
+//        Account account = accountService.getAccountById();
+ };
 
-       ctx.json(account);
-       ctx.status(200);
+    private Handler deleteAccountById = ctx -> {
+//        String id = ctx.pathParam("id");
     };
 
     @Override
     public void mapEndpoints(Javalin app) {
-        app.get("/api/v1/accounts", getAllAccounts);
-        app.get("api/v1/accounts/:id", getAccountById);
+        app.get("/accounts", getAllAccounts);
+        app.get("/accounts/:id", getAccountById);
+        app.delete("/accounts/:id", deleteAccountById);
     }
 }

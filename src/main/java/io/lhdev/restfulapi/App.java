@@ -15,13 +15,19 @@ public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {
+
         app = Javalin.create();
+
+        app.before(ctx -> {
+            String URI = ctx.req.getRequestURI();
+            String httpMethod = ctx.req.getMethod();
+            logger.info(httpMethod + " request to endpoint " + URI + " received");
+        });
 
         mapControllers(new ClientController(), new AccountController());
 
         app.start(7000);
 
-        logger.info("Hello Logs from {}", App.class.getSimpleName());
     }
 
     public static void mapControllers(Controller... controllers){

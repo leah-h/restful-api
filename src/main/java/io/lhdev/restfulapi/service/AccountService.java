@@ -1,7 +1,14 @@
 package io.lhdev.restfulapi.service;
 
+import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
 import io.lhdev.restfulapi.model.AccountRepository;
+import io.lhdev.restfulapi.util.ConnectionUtil;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 public class AccountService {
 
@@ -11,14 +18,32 @@ public class AccountService {
         this.accountRepository = new AccountRepository();
     }
 
+    // For passing in the mocked accountRepository for unit testing
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
 
-    public Account getAccountById(String stringId) {
-        Long id = Long.parseLong(stringId);
-         return accountRepository.getAccountById(id);
+    public List<Account> getAllAccounts() throws DatabaseException {
+
+        try {
+            Connection connection = ConnectionUtil.getConnection();
+            this.accountRepository.setConnection(connection);
+            connection.setAutoCommit(false);
+
+
+        } catch (SQLException e){
+            throw new DatabaseException("Unable to connect" + e.getMessage());
+        }
+        return accountRepository.getAllAccounts();
     }
+
+
+//    public Optional<Account> getAccountById(String stringId) {
+//       int id = Integer.parseInt(stringId);
+//         return accountRepository.getAccountById(id);
+//    }
+
+
 }
 
