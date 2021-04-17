@@ -23,26 +23,27 @@ public class AccountController implements Controller{
     public AccountController() {
         this.accountService = new AccountService();
     }
-
-    List<Account> accounts = Arrays.asList(
-            new Account(5432,
-                    "Checking",
-                    5000.00,
-                    1),
-            new Account(6789,
-                    "Savings",
-                    556.00,
-                    2)
-    );
+//
+//    List<Account> accounts = Arrays.asList(
+//            new Account(5432,
+//                    "Checking",
+//                    5000.00,
+//                    1),
+//            new Account(6789,
+//                    "Savings",
+//                    556.00,
+//                    2)
+//    );
 
     private Handler getAllAccounts = ctx -> {
-        ctx.json(accounts);
+        List<Account> listOfAccounts = accountService.getAllAccounts();
+        ctx.json(listOfAccounts);
     };
 
 
     public static Handler getAccountById = ctx-> {
 //        int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-//        AccountService service = AccountService.intance();
+//        AccountService service = AccountService.instance();
 //        Account account = accountService.getAccountById();
  };
 
