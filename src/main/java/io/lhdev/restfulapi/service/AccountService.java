@@ -8,7 +8,7 @@ import io.lhdev.restfulapi.util.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
+
 
 public class AccountService {
 
@@ -37,13 +37,5 @@ public class AccountService {
         }
         return accountRepository.getAllAccounts();
     }
-
-
-//    public Optional<Account> getAccountById(String stringId) {
-//       int id = Integer.parseInt(stringId);
-//         return accountRepository.getAccountById(id);
-//    }
-
-
 }
 

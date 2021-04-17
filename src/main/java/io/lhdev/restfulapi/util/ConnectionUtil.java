@@ -1,10 +1,10 @@
 package io.lhdev.restfulapi.util;
 
-import org.mariadb.jdbc.Driver;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import org.mariadb.jdbc.Driver;
 
 public class ConnectionUtil {
 
@@ -20,10 +20,13 @@ public class ConnectionUtil {
 //        String connectionString = System.getenv("DB_URL");
 
         String username = "root";
-        String password = "leah";
-        String connectionString = "jdbc:mariadb://localhost:3307/my_first_database";
+        String password = "leahh";
+        String connectionString = "jdbc:mariadb://localhost/my_first_database";
+        Connection conn = DriverManager.getConnection(connectionString, username, password);
 
-        return DriverManager.getConnection(connectionString, username, password);
+//        return DriverManager.getConnection(connectionString, username, password);
+
+            return conn;
     }
 
 }

@@ -1,28 +1,37 @@
 package io.lhdev.restfulapi.model;
 
+import java.util.Objects;
+
 public class Client {
 
-    private Long id;
-    private Long acctNumber;
+    private int id;
+    private int acctNumber;
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNumber;
     private String address;
+    private String city;
+    private String state;
+    private String zip;
 
     public Client() {
         super();
     }
 
-    public Client(String firstName, String lastName, String email, String phoneNumber, String address) {
+    public Client(int acctNumber, String firstName, String lastName, String email, String phoneNumber, String address, String city, String state, String zip) {
+        this.acctNumber = acctNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
     }
 
-    public Client(Long id, Long acctNumber, String firstName, String lastName, String email, String phoneNumber, String address) {
+    public Client(int id, int acctNumber, String firstName, String lastName, String email, String phoneNumber, String address, String city, String state, String zip) {
         this.id = id;
         this.acctNumber = acctNumber;
         this.firstName = firstName;
@@ -30,21 +39,24 @@ public class Client {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getAcctNumber() {
+    public int getAcctNumber() {
         return acctNumber;
     }
 
-    public void setAcctNumber(Long acctNumber) {
+    public void setAcctNumber(int acctNumber) {
         this.acctNumber = acctNumber;
     }
 
@@ -88,6 +100,30 @@ public class Client {
         this.address = address;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -98,6 +134,24 @@ public class Client {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zip='" + zip + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id == client.id && acctNumber == client.acctNumber && firstName.equals(client.firstName) && lastName.equals(client.lastName) && email.equals(client.email) && Objects.equals(phoneNumber, client.phoneNumber) && Objects.equals(address, client.address) && Objects.equals(city, client.city) && Objects.equals(state, client.state) && Objects.equals(zip, client.zip);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, acctNumber, firstName, lastName, email, phoneNumber, address, city, state, zip);
+    }
 }
+
+

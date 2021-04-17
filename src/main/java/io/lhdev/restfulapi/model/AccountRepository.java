@@ -8,32 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 
 public class AccountRepository {
 
-//    private Connection connection;
-//
-//    public AccountRepository(){
-//        super();
-//    }
-//
-//    public void setConnection(Connection connection){
-//        this.connection = connection;
-//    }
-
-//    List<Account> accounts = Arrays.asList(
-//            new Account(5432,
-//                    "Checking",
-//                    5000.00,
-//                    1),
-//            new Account(6789,
-//                    "Savings",
-//                    556.00,
-//                    2)
-//    );
     private Connection connection;
 
     public AccountRepository(){
@@ -56,9 +35,9 @@ public class AccountRepository {
 
            while (rs.next()) {
                int accountId = rs.getInt("id");
-               String type = rs.getNString("type");
-               Double balance = rs.getDouble("balance");
-               int clientId = rs.getInt("clientId");
+               String type = rs.getNString("account_type");
+               double balance = rs.getDouble("balance");
+               int clientId = rs.getInt("client_id");
 
                Account account = new Account(accountId, type, balance, clientId);
                listOfAccounts.add(account);
