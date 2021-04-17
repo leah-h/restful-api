@@ -1,7 +1,5 @@
 package io.lhdev.restfulapi.exceptions;
 
-import javax.xml.crypto.Data;
-
 public class DatabaseException extends Exception{
 
     public DatabaseException(){

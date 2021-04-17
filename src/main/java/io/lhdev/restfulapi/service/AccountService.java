@@ -1,12 +1,11 @@
 package io.lhdev.restfulapi.service;
 
+import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
-import io.lhdev.restfulapi.model.AccountRepository;
-import io.lhdev.restfulapi.util.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import io.lhdev.restfulapi.model.AccountRepository;
+
 import java.util.List;
 
 
@@ -25,17 +24,11 @@ public class AccountService {
 
 
     public List<Account> getAllAccounts() throws DatabaseException {
-
-        try {
-            Connection connection = ConnectionUtil.getConnection();
-            this.accountRepository.setConnection(connection);
-            connection.setAutoCommit(false);
-
-
-        } catch (SQLException e){
-            throw new DatabaseException("Unable to connect" + e.getMessage());
-        }
         return accountRepository.getAllAccounts();
+    }
+
+    public Account getAccountById(int id) throws AccountNotFoundException, DatabaseException{
+        return accountRepository.getAccountById(id);
     }
 }
 

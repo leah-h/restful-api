@@ -18,22 +18,12 @@ import java.util.Objects;
 public class AccountController implements Controller{
 
     private Logger logger = LoggerFactory.getLogger(AccountController.class);
-    private static AccountService accountService;
+    private AccountService accountService;
 
     public AccountController() {
         this.accountService = new AccountService();
     }
-//
-//    List<Account> accounts = Arrays.asList(
-//            new Account(5432,
-//                    "Checking",
-//                    5000.00,
-//                    1),
-//            new Account(6789,
-//                    "Savings",
-//                    556.00,
-//                    2)
-//    );
+
 
     private Handler getAllAccounts = ctx -> {
         List<Account> listOfAccounts = accountService.getAllAccounts();
@@ -41,10 +31,12 @@ public class AccountController implements Controller{
     };
 
 
-    public static Handler getAccountById = ctx-> {
-//        int id = Integer.parseInt(Objects.requireNonNull(ctx.pathParam("id")));
-//        AccountService service = AccountService.instance();
-//        Account account = accountService.getAccountById();
+    private Handler getAccountById = ctx-> {
+        String id = ctx.pathParam("id");
+
+        Account account = accountService.getAccountById(Integer.parseInt(id));
+
+        ctx.json(account);
  };
 
     private Handler deleteAccountById = ctx -> {
