@@ -23,11 +23,31 @@ public class ClientController implements Controller{
         ctx.json(listOfClients);
     };
 
+    private Handler getClientById = ctx -> {
+        String id = ctx.pathParam("id");
+
+        Client client = clientService.getClientById(Integer.parseInt(id));
+
+        ctx.json(client);
+    };
+
+    private Handler addClient = ctx -> {
+        Client client = ctx.bodyAsClass(Client.class);
+
+        Client insertedClient = clientService.addClient(client);
+
+        ctx.status(201);
+        ctx.json(insertedClient);
+    };
+
 
 
     @Override
     public void mapEndpoints(Javalin app) {
+        app.post("/clients", addClient);
         app.get("/clients", getAllClients);
+        app.get("/clients/:id", getClientById);
+
     }
 }
 
