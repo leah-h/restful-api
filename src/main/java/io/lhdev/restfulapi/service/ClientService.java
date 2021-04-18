@@ -33,4 +33,8 @@ public class ClientService {
         return clientRepository.addClient(client);
     }
 
+    public void deleteClientById(int id) throws DatabaseException {
+        clientRepository.deleteClientById(id);
+    }
+
 }

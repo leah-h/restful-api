@@ -125,4 +125,19 @@ public class ClientRepository {
         }
         }
 
+        public void deleteClientById(int id) throws DatabaseException{
+            try (Connection connection = ConnectionUtil.getConnection()) {
+                String sql = "DELETE FROM clients WHERE id = ?";
+
+                PreparedStatement pstmt = connection.prepareStatement(sql);
+                pstmt.setInt(1, id);
+
+                ResultSet rs = pstmt.executeQuery();
+
+
+            } catch (SQLException e) {
+                throw new DatabaseException("Unable to connect to database: " + e.getMessage());
+            }
+
+        }
 }
