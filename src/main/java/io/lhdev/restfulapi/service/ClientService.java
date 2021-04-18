@@ -1,7 +1,8 @@
 package io.lhdev.restfulapi.service;
 
+import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Client;
-import io.lhdev.restfulapi.model.ClientRepository;
+import io.lhdev.restfulapi.dao.ClientRepository;
 
 import java.util.List;
 
@@ -13,9 +14,13 @@ public class ClientService {
         this.clientRepository = new ClientRepository();
     }
 
-    public Client getAllClients(){
-        List<Client> clients = clientRepository.getAllClients();
-        return (Client) clients;
+    // For passing in the mocked clientReposity for unit testing
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+
+    public List<Client> getAllClients() throws DatabaseException {
+        return clientRepository.getAllClients();
     }
 
 }

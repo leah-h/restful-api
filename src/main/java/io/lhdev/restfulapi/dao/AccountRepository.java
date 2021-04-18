@@ -1,8 +1,9 @@
-package io.lhdev.restfulapi.model;
+package io.lhdev.restfulapi.dao;
 
 import io.lhdev.restfulapi.exceptions.AccountCreationException;
 import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
+import io.lhdev.restfulapi.model.Account;
 import io.lhdev.restfulapi.util.ConnectionUtil;
 
 import java.sql.*;
