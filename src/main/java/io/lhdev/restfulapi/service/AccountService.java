@@ -1,5 +1,6 @@
 package io.lhdev.restfulapi.service;
 
+import io.lhdev.restfulapi.exceptions.AccountCreationException;
 import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
@@ -29,6 +30,10 @@ public class AccountService {
 
     public Account getAccountById(int id) throws AccountNotFoundException, DatabaseException{
         return accountRepository.getAccountById(id);
+    }
+
+    public Account addAccount(Account account) throws DatabaseException, AccountCreationException {
+        return accountRepository.addAccount(account);
     }
 }
 

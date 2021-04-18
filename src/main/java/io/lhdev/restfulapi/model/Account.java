@@ -74,4 +74,6 @@ public class Account {
     public int hashCode() {
         return Objects.hash(id, type, balance, clientId);
     }
+
+
 }

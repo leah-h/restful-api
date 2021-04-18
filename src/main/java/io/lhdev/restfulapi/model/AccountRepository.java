@@ -1,5 +1,6 @@
 package io.lhdev.restfulapi.model;
 
+import io.lhdev.restfulapi.exceptions.AccountCreationException;
 import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.util.ConnectionUtil;
@@ -68,6 +69,39 @@ public class AccountRepository {
         }
 
         throw new AccountNotFoundException("Account with id: " + id + " was not found.");
+    }
+
+    public Account addAccount(Account account) throws DatabaseException, AccountCreationException {
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            String sql = "INSERT INTO accounts (id, account_type, balance, client_id) " +
+                    "VALUES (?, ?, ?, ?)";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            pstmt.setInt(1, account.getId());
+            pstmt.setString(2, account.getType());
+            pstmt.setInt(3, (int) account.getBalance());
+            pstmt.setInt(4, account.getClientId());
+
+            int recordsModified = pstmt.executeUpdate();
+
+            if (recordsModified !=1){
+                throw new AccountCreationException("Unable to add account to database");
+            }
+
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()){
+                account.setId(generatedKeys.getInt(1));
+            } else {
+                throw new AccountCreationException("No id generated when trying to add account. Account addition failed.");
+            }
+
+            return account;
+
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Unable to connect to database: " + e.getMessage());
+        }
     }
 
 }
