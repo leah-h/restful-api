@@ -33,7 +33,6 @@ public class ClientRepository {
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                int acctNumber = rs.getInt("accountId");
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
                 String email = rs.getString("email");
@@ -43,7 +42,7 @@ public class ClientRepository {
                 String state = rs.getString("state");
                 String zip  = rs.getString("zip");
 
-                Client client = new Client(id, acctNumber, firstName, lastName, email,
+                Client client = new Client(id, firstName, lastName, email,
                         phoneNumber, address, city, state, zip);
                 listOfClients.add(client);
             }
@@ -65,7 +64,6 @@ public class ClientRepository {
 
             if (rs.next()) {
                 int clientId = rs.getInt("id");
-                int acctNumber = rs.getInt("accountId");
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
                 String email = rs.getString("email");
@@ -75,34 +73,35 @@ public class ClientRepository {
                 String state = rs.getString("state");
                 String zip  = rs.getString("zip");
 
-                return new Client(clientId, acctNumber, firstName, lastName, email,
+                return new Client(id, firstName, lastName, email,
                         phoneNumber, address, city, state, zip);
-
             }
+
+            throw new ClientNotFoundException("Client with id: " + id + " was not found.");
+
         } catch (SQLException e) {
             throw new DatabaseException(("Error occurred with the database: " + e.getMessage()));
         }
 
-        throw new ClientNotFoundException("Client with id: " + id + " was not found.");
     }
 
     public Client addClient(Client client) throws DatabaseException, ClientCreationException {
+
         try (Connection connection = ConnectionUtil.getConnection()) {
-            String sql = "INSERT INTO clients (id, accountId, firstName, lastName, email," +
-                    " phoneNumber, address, city, state, zip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO clients (id, firstName, lastName, email," +
+                    " phoneNumber, address, city, state, zip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             pstmt.setInt(1, client.getId());
-            pstmt.setInt(2, client.getAcctNumber());
-            pstmt.setString(3, client.getFirstName());
-            pstmt.setString(4, client.getLastName());
-            pstmt.setString(5, client.getEmail());
-            pstmt.setString(6, client.getPhoneNumber());
-            pstmt.setString(7, client.getAddress());
-            pstmt.setString(8, client.getCity());
-            pstmt.setString(9, client.getState());
-            pstmt.setString(10, client.getZip());
+            pstmt.setString(2, client.getFirstName());
+            pstmt.setString(3, client.getLastName());
+            pstmt.setString(4, client.getEmail());
+            pstmt.setString(5, client.getPhoneNumber());
+            pstmt.setString(6, client.getAddress());
+            pstmt.setString(7, client.getCity());
+            pstmt.setString(8, client.getState());
+            pstmt.setString(9, client.getZip());
 
             int recordsModified = pstmt.executeUpdate();
 
@@ -118,6 +117,7 @@ public class ClientRepository {
                         "Client addition failed.");
             }
 
+            connection.commit();
             return client;
 
         } catch (SQLException e) {
@@ -125,19 +125,53 @@ public class ClientRepository {
         }
         }
 
-        public void deleteClientById(int id) throws DatabaseException{
-            try (Connection connection = ConnectionUtil.getConnection()) {
-                String sql = "DELETE FROM clients WHERE id = ?";
+    public void deleteClientById(int id) throws DatabaseException {
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            String sql = "DELETE FROM clients WHERE id = ?";
 
-                PreparedStatement pstmt = connection.prepareStatement(sql);
-                pstmt.setInt(1, id);
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, id);
 
-                ResultSet rs = pstmt.executeQuery();
+            pstmt.executeQuery();
 
+        } catch (SQLException e) {
+            throw new DatabaseException("Unable to connect to database: " + e.getMessage());
+        }
+    }
 
-            } catch (SQLException e) {
-                throw new DatabaseException("Unable to connect to database: " + e.getMessage());
+    public Client updateClientById(Client client)
+            throws DatabaseException, ClientNotFoundException {
+
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            String sql = "UPDATE clients " +
+                    "SET firstName = ?, lastName = ?, email = ?, phoneNumber = ?, address = ?, " +
+                    "city = ?," +
+                    " state = ?, zip = ?" +
+                    "WHERE id = ?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+                pstmt.setString(1, client.getFirstName());
+                pstmt.setString(2, client.getLastName());
+                pstmt.setString(3, client.getEmail());
+                pstmt.setString(4, client.getPhoneNumber());
+                pstmt.setString(5, client.getAddress());
+                pstmt.setString(6, client.getCity());
+                pstmt.setString(7, client.getState());
+                pstmt.setString(8, client.getZip());
+                pstmt.setInt(9, client.getId());
+
+            int recordsModified = pstmt.executeUpdate();
+
+            if (recordsModified != 1) {
+                throw new ClientNotFoundException("No client found.");
             }
 
+            return client;
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Unable to connect to database: " + e.getMessage());
         }
+    }
+
+
 }

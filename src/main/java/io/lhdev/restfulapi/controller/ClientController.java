@@ -2,6 +2,7 @@ package io.lhdev.restfulapi.controller;
 
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
+import io.lhdev.restfulapi.exceptions.ClientNotFoundException;
 import io.lhdev.restfulapi.model.Client;
 import io.lhdev.restfulapi.service.ClientService;
 import org.slf4j.Logger;
@@ -34,10 +35,10 @@ public class ClientController implements Controller{
     private Handler addClient = ctx -> {
         Client client = ctx.bodyAsClass(Client.class);
 
-        Client insertedClient = clientService.addClient(client);
+        Client insertedClient = this.clientService.addClient(client);
 
-        ctx.status(201);
         ctx.json(insertedClient);
+        ctx.status(201);
     };
 
     private Handler deleteClientById = ctx -> {
@@ -48,12 +49,27 @@ public class ClientController implements Controller{
         ctx.status(201);
     };
 
+    private Handler updateClientById = ctx -> {
+        String id = ctx.pathParam("id");
+
+        Client client = ctx.bodyAsClass(Client.class);
+
+        clientService.updateClientById(client);
+
+        ctx.status(201);
+//        ctx.json(updatedClient);
+
+    };
+
+
+
     @Override
     public void mapEndpoints(Javalin app) {
         app.post("/clients", addClient);
         app.get("/clients", getAllClients);
         app.get("/clients/:id", getClientById);
         app.delete("/clients/:id", deleteClientById);
+        app.put("/clients/:id", updateClientById);
 
     }
 }

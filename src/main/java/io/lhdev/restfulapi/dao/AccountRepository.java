@@ -2,18 +2,22 @@ package io.lhdev.restfulapi.dao;
 
 import io.lhdev.restfulapi.exceptions.AccountCreationException;
 import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
+import io.lhdev.restfulapi.exceptions.ClientNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
+import io.lhdev.restfulapi.model.Client;
 import io.lhdev.restfulapi.util.ConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class AccountRepository {
 
     private Connection connection;
+    private ClientRepository clientRepository;
 
     public AccountRepository() {
         super();
@@ -74,15 +78,13 @@ public class AccountRepository {
 
     public Account addAccount(Account account) throws DatabaseException, AccountCreationException {
         try (Connection connection = ConnectionUtil.getConnection()) {
-            String sql = "INSERT INTO accounts (id, account_type, balance, client_id) " +
-                    "VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO accounts (account_type, balance, client_id) " +
+                    "VALUES (?, ?, ?)";
 
             PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            pstmt.setInt(1, account.getId());
-            pstmt.setString(2, account.getType());
-            pstmt.setInt(3, (int) account.getBalance());
-            pstmt.setInt(4, account.getClientId());
+            pstmt.setString(1, account.getType());
+            pstmt.setDouble(2, account.getBalance());
+            pstmt.setInt(3, account.getClientId());
 
             int recordsModified = pstmt.executeUpdate();
 
@@ -103,6 +105,39 @@ public class AccountRepository {
         } catch (SQLException e) {
             throw new DatabaseException("Unable to connect to database: " + e.getMessage());
         }
+    }
+
+    public void addAccountByClientId(int clientId, Account account) throws ClientNotFoundException,
+            DatabaseException, AccountCreationException {
+        try (Connection connection = ConnectionUtil.getConnection()) {
+
+            String sql = "INSERT INTO accounts (account_type, balance, client_id)" +
+                    "VALUES (?, ?, ?)";
+
+
+            PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, account.getType());
+            pstmt.setDouble(2, account.getBalance());
+            pstmt.setInt(3, account.getClientId());
+
+            int recordsAdded = pstmt.executeUpdate();
+
+            if (recordsAdded != 1) {
+                throw new AccountCreationException("No new account created.");
+            }
+
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                account.setId(generatedKeys.getInt(1));
+            } else {
+                throw new AccountCreationException("No id generated when trying to add account. Account addition failed.");
+            }
+            System.out.println("Account successfully added.");
+
+        } catch (SQLException | AccountCreationException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

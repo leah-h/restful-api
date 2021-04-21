@@ -5,7 +5,6 @@ import java.util.Objects;
 public class Client {
 
     private int id;
-    private int acctNumber;
     private String firstName;
     private String lastName;
     private String email;
@@ -19,8 +18,8 @@ public class Client {
         super();
     }
 
-    public Client(int acctNumber, String firstName, String lastName, String email, String phoneNumber, String address, String city, String state, String zip) {
-        this.acctNumber = acctNumber;
+    public Client( String firstName, String lastName, String email, String phoneNumber,
+                  String address, String city, String state, String zip) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -31,9 +30,9 @@ public class Client {
         this.zip = zip;
     }
 
-    public Client(int id, int acctNumber, String firstName, String lastName, String email, String phoneNumber, String address, String city, String state, String zip) {
+    public Client(int id, String firstName, String lastName, String email, String phoneNumber,
+                  String address, String city, String state, String zip) {
         this.id = id;
-        this.acctNumber = acctNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -50,14 +49,6 @@ public class Client {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getAcctNumber() {
-        return acctNumber;
-    }
-
-    public void setAcctNumber(int acctNumber) {
-        this.acctNumber = acctNumber;
     }
 
     public String getFirstName() {
@@ -128,7 +119,6 @@ public class Client {
     public String toString() {
         return "Client{" +
                 "id=" + id +
-                ", acctNumber=" + acctNumber +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
@@ -145,12 +135,12 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return id == client.id && acctNumber == client.acctNumber && firstName.equals(client.firstName) && lastName.equals(client.lastName) && email.equals(client.email) && Objects.equals(phoneNumber, client.phoneNumber) && Objects.equals(address, client.address) && Objects.equals(city, client.city) && Objects.equals(state, client.state) && Objects.equals(zip, client.zip);
+        return id == client.id && firstName.equals(client.firstName) && lastName.equals(client.lastName) && email.equals(client.email) && Objects.equals(phoneNumber, client.phoneNumber) && Objects.equals(address, client.address) && Objects.equals(city, client.city) && Objects.equals(state, client.state) && Objects.equals(zip, client.zip);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, acctNumber, firstName, lastName, email, phoneNumber, address, city, state, zip);
+        return Objects.hash(id, firstName, lastName, email, phoneNumber, address, city, state, zip);
     }
 }
 

@@ -1,11 +1,16 @@
 package io.lhdev.restfulapi.service;
 
+import io.lhdev.restfulapi.controller.ClientController;
+import io.lhdev.restfulapi.dao.ClientRepository;
 import io.lhdev.restfulapi.exceptions.AccountCreationException;
 import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
+import io.lhdev.restfulapi.exceptions.ClientNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
 
 import io.lhdev.restfulapi.dao.AccountRepository;
+import io.lhdev.restfulapi.model.Client;
+
 
 import java.util.List;
 
@@ -13,6 +18,9 @@ import java.util.List;
 public class AccountService {
 
     private AccountRepository accountRepository;
+    public ClientRepository clientRepository;
+   public ClientService clientService;
+   public ClientController clientController;
 
     public AccountService() {
         this.accountRepository = new AccountRepository();
@@ -25,7 +33,7 @@ public class AccountService {
 
 
     public List<Account> getAllAccounts() throws DatabaseException {
-        return accountRepository.getAllAccounts();
+        return this.accountRepository.getAllAccounts();
     }
 
     public Account getAccountById(int id) throws AccountNotFoundException, DatabaseException{
@@ -34,6 +42,12 @@ public class AccountService {
 
     public Account addAccount(Account account) throws DatabaseException, AccountCreationException {
         return accountRepository.addAccount(account);
+    }
+
+    public void addAccountByClientId(int clientId, Account account) throws DatabaseException, AccountCreationException,
+            ClientNotFoundException {
+
+        accountRepository.addAccountByClientId(clientId, account);
     }
 }
 
