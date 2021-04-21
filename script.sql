@@ -1,9 +1,8 @@
 DROP TABLE IF EXISTS accounts;
-
+DROP TABLE IF EXISTS clients;
 
 CREATE TABLE clients(
                         id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                        accountId INTEGER NOT NULL,
                         firstName VARCHAR(255) NOT NULL,
                         lastName VARCHAR(255) NOT NULL,
                         email VARCHAR(255) NOT NULL,
@@ -16,8 +15,9 @@ CREATE TABLE clients(
 
 INSERT INTO clients
 VALUES
-(1, 12345, "Joe", "Smith", "joe.smith@test.com", "123-456-7890", "123 Fake St.", "Atlanta", "GA", "30307"),
-(2, 54321, "Jane", "Doe", "jane.doe@test.com", "404-456-7890", "564 Peachtree Rd.", "Atlanta", "GA", "30312");
+(1, "Joe", "Smith", "joe.smith@test.com", "123-456-7890", "123 Fake St.", "Atlanta", "GA", "30307"),
+(2, "Jane", "Doe", "jane.doe@test.com", "404-456-7890", "564 Peachtree Rd.", "Atlanta", "GA", "30312"),
+(4, "Katherine", "Smith", "katherine.smith@test.com", "718-458-9234", "23 N Highland Ave NE", "Atlanta", "GA", "30314");
 
 CREATE TABLE accounts(
                          id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -35,3 +35,10 @@ VALUES
 
 SELECT * FROM clients;
 SELECT * FROM accounts;
+
+
+SELECT *
+FROM clients
+WHERE id = 1;
+
+
