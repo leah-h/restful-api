@@ -3,20 +3,23 @@ package io.lhdev.restfulapi.controller;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
 import io.lhdev.restfulapi.dao.ClientRepository;
+import io.lhdev.restfulapi.exceptions.AccountCreationException;
 import io.lhdev.restfulapi.exceptions.ClientNotFoundException;
 import io.lhdev.restfulapi.model.Account;
 
 import io.lhdev.restfulapi.model.Client;
 import io.lhdev.restfulapi.service.AccountService;
+import io.lhdev.restfulapi.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.channels.AcceptPendingException;
 import java.util.List;
 
 
 public class AccountController implements Controller{
 
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     private Logger logger = LoggerFactory.getLogger(AccountController.class);
 
@@ -45,6 +48,12 @@ public class AccountController implements Controller{
         Account account = ctx.bodyAsClass(Account.class);
 
         Account insertedAccount = accountService.addAccount(account);
+        if (insertedAccount.getId() != 0) {
+            ctx.json(insertedAccount);
+        } else {
+            logger.info("Account successfully added.");
+            ctx.result("Account successfully added.");
+        }
 
         ctx.status(201);
         ctx.json(insertedAccount);
@@ -58,9 +67,15 @@ public class AccountController implements Controller{
         String id = ctx.pathParam("id");
         Account account = ctx.bodyAsClass(Account.class);
 
-        accountService.addAccountByClientId(Integer.parseInt(id), account);
+        Account newAccountAdded = accountService.addAccountByClientId(Integer.parseInt(id), account);
+        if (newAccountAdded.getId() != 0) {
+            ctx.json(newAccountAdded);
+        } else {
+            logger.info("Client with id: " + Integer.parseInt(id) + " does not exist");
+            ctx.result("Client does not exist");
+        }
 
-        ctx.result("New account successfully added.");
+
     };
 
     @Override

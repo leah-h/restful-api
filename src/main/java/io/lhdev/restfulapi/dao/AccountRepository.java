@@ -5,16 +5,18 @@ import io.lhdev.restfulapi.exceptions.AccountNotFoundException;
 import io.lhdev.restfulapi.exceptions.ClientNotFoundException;
 import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
-import io.lhdev.restfulapi.model.Client;
 import io.lhdev.restfulapi.util.ConnectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class AccountRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountRepository.class);
 
     private Connection connection;
     private ClientRepository clientRepository;
@@ -40,7 +42,7 @@ public class AccountRepository {
             while (rs.next()) {
                 int accountId = rs.getInt("id");
                 String type = rs.getNString("account_type");
-                double balance = rs.getDouble("balance");
+                int balance = rs.getInt("balance");
                 int clientId = rs.getInt("client_id");
 
                 Account account = new Account(accountId, type, balance, clientId);
@@ -64,7 +66,7 @@ public class AccountRepository {
             if (rs.next()) {
                 int accountId = rs.getInt("id");
                 String type = rs.getNString("account_type");
-                double balance = rs.getDouble("balance");
+                int balance = rs.getInt("balance");
                 int clientId = rs.getInt("client_id");
 
                 return new Account(accountId, type, balance, clientId);
@@ -107,7 +109,7 @@ public class AccountRepository {
         }
     }
 
-    public void addAccountByClientId(int clientId, Account account) throws ClientNotFoundException,
+    public Account addAccountByClientId(int clientId, Account account) throws ClientNotFoundException,
             DatabaseException, AccountCreationException {
         try (Connection connection = ConnectionUtil.getConnection()) {
 
@@ -132,12 +134,13 @@ public class AccountRepository {
             } else {
                 throw new AccountCreationException("No id generated when trying to add account. Account addition failed.");
             }
-            System.out.println("Account successfully added.");
+
+            logger.info("Account successfully added.");
 
         } catch (SQLException | AccountCreationException e) {
             e.printStackTrace();
         }
-
+        return account;
     }
 
 }

@@ -18,9 +18,9 @@ import java.util.List;
 public class AccountService {
 
     private AccountRepository accountRepository;
-    public ClientRepository clientRepository;
-   public ClientService clientService;
-   public ClientController clientController;
+    private ClientRepository clientRepository;
+    public ClientService clientService;
+    public ClientController clientController;
 
     public AccountService() {
         this.accountRepository = new AccountRepository();
@@ -36,7 +36,7 @@ public class AccountService {
         return this.accountRepository.getAllAccounts();
     }
 
-    public Account getAccountById(int id) throws AccountNotFoundException, DatabaseException{
+    public Account getAccountById(int id) throws AccountNotFoundException, DatabaseException {
         return accountRepository.getAccountById(id);
     }
 
@@ -44,10 +44,11 @@ public class AccountService {
         return accountRepository.addAccount(account);
     }
 
-    public void addAccountByClientId(int clientId, Account account) throws DatabaseException, AccountCreationException,
+    public Account addAccountByClientId(int clientId, Account account) throws DatabaseException, AccountCreationException,
             ClientNotFoundException {
-
-        accountRepository.addAccountByClientId(clientId, account);
+        return  accountRepository.addAccountByClientId(clientId, account);
     }
+
+
 }
 

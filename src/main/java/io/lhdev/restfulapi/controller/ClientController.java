@@ -21,6 +21,7 @@ public class ClientController implements Controller{
 
     private Handler getAllClients = ctx -> {
         List<Client> listOfClients = clientService.getAllClients();
+
         ctx.json(listOfClients);
     };
 

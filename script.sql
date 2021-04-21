@@ -33,6 +33,7 @@ VALUES
 (5432, "Checking", 5000.00, 1),
 (6789, "Savings", 556.00, 2);
 
+
 SELECT * FROM clients;
 SELECT * FROM accounts;
 

@@ -5,6 +5,7 @@ import io.lhdev.restfulapi.service.ClientService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import static org.junit.Assert.*;
 
@@ -27,9 +28,10 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void itShouldGetAllClients() {
+    public void itShouldGetAllClients() throws DatabaseException{
         try {
             clientService.getAllClients();
+
         } catch(DatabaseException e) {
             assertEquals(e.getMessage(), "Unable to connect to the database");
         }
