@@ -2,9 +2,6 @@ package io.lhdev.restfulapi.controller;
 
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
-import io.lhdev.restfulapi.dao.ClientRepository;
-import io.lhdev.restfulapi.exceptions.AccountCreationException;
-import io.lhdev.restfulapi.exceptions.ClientNotFoundException;
 import io.lhdev.restfulapi.model.Account;
 
 import io.lhdev.restfulapi.model.Client;
@@ -13,7 +10,7 @@ import io.lhdev.restfulapi.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.channels.AcceptPendingException;
+
 import java.util.List;
 
 
@@ -80,11 +77,61 @@ public class AccountController implements Controller{
         String clientId = ctx.pathParam("id");
 
         List<Account> listOfAccounts = accountService.getAllAccountsByClientId(Integer.parseInt(clientId));
+
         if(!listOfAccounts.isEmpty()) {
             ctx.json(listOfAccounts);
         } else {
             logger.info("Client with id: " + Integer.parseInt(clientId) + " does not exist.");
             ctx.result("Client does not exist.");
+        }
+    };
+
+    private Handler getAllAccountsByClientIdWithBalance = ctx -> {
+        String clientId = ctx.pathParam("id");
+        String amountLessThan = ctx.pathParam("X");
+        String amountGreaterThan = ctx.pathParam("Y");
+
+        List<Account> listOfAccounts = accountService.getAllAccountsByClientIdWithBalance(Integer.parseInt(clientId),
+                Integer.parseInt(amountLessThan), Integer.parseInt(amountGreaterThan));
+
+        if(!listOfAccounts.isEmpty()){
+            ctx.json(listOfAccounts);
+        } else {
+            logger.info("Client with id: " + Integer.parseInt(clientId) + " does not exist.");
+            ctx.result("Client does not exist.");
+        }
+    };
+
+    private Handler getAccountByIdForClientId = ctx -> {
+        String acctId = ctx.pathParam("acctId");
+        String clientId = ctx.pathParam("clientId");
+
+        Account accountFound = accountService.getAccountByIdForClientId(Integer.parseInt(acctId),
+                Integer.parseInt(clientId));
+
+        if(accountFound.getId() != 0){
+            ctx.json(accountFound);
+        } else {
+            logger.info("No such account for client");
+            ctx.result("No such account for client.");
+        }
+    };
+
+    private Handler updateAccountByIdForClientId = ctx -> {
+        String acctId = ctx.pathParam("acctId");
+        String clientId = ctx.pathParam("clientId");
+
+        Account account = ctx.bodyAsClass(Account.class);
+
+        Account accountFound = accountService.updateAccountByIdForClientId(Integer.parseInt(acctId),
+                Integer.parseInt(clientId), account);
+
+        if( (accountFound.getId() == Integer.parseInt(acctId)) &
+                (accountFound.getClientId() == Integer.parseInt(clientId))) {
+            ctx.json(accountFound);
+        } else {
+            logger.info("No such account for client");
+            ctx.result("No such account for client.");
         }
     };
 
@@ -97,5 +144,8 @@ public class AccountController implements Controller{
         app.post("/accounts", addAccount);
         app.post("/clients/:id/accounts", addAccountByClientId);
         app.get("/clients/:id/accounts", getAllAccountsByClientId);
+        app.get("/clients/:id/accounts?amountLessThan=X&amountGreaterThan=Y", getAllAccountsByClientIdWithBalance);
+        app.get("/clients/:clientId/accounts/:acctId", getAccountByIdForClientId);
+        app.put("/clients/:clientId/accounts/:acctId", updateAccountByIdForClientId);
     }
 }

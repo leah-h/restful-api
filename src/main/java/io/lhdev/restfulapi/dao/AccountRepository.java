@@ -55,7 +55,11 @@ public class AccountRepository {
     }
 
     public Account getAccountById(int id) throws AccountNotFoundException, DatabaseException {
+
+        Account account = new Account();
+
         try (Connection connection = ConnectionUtil.getConnection()) {
+
             String sql = "SELECT * FROM accounts a WHERE a.id = ?";
 
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -69,13 +73,13 @@ public class AccountRepository {
                 int balance = rs.getInt("balance");
                 int clientId = rs.getInt("client_id");
 
-                return new Account(accountId, type, balance, clientId);
+                account = new Account(accountId, type, balance, clientId);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Error occurred with the database: " + e.getMessage());
         }
 
-        throw new AccountNotFoundException("Account with id: " + id + " was not found.");
+        return account;
     }
 
     public Account addAccount(Account account) throws DatabaseException, AccountCreationException {
@@ -173,5 +177,103 @@ public class AccountRepository {
         return listOfAccounts;
 
     }
+
+// ! Check different output from db vs. postman
+    public List<Account> getAllAccountsByClientIdWithBalance(int clientId, int X, int Y) throws ClientNotFoundException, DatabaseException,
+            SQLException {
+
+        List<Account> listOfAccounts = new ArrayList<>();
+
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM accounts WHERE client_id = ? HAVING balance < ? AND balance > ?)";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, clientId);
+            pstmt.setInt(2, X);
+            pstmt.setInt(3, Y);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int accountId = rs.getInt("id");
+                String type = rs.getNString("account_type");
+                int balance = rs.getInt("balance");
+
+                Account account = new Account(accountId, type, balance, clientId);
+                listOfAccounts.add(account);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listOfAccounts;
+        }
+
+    public Account getAccountByIdForClientId(int acctId, int clientId) throws ClientNotFoundException,
+            AccountNotFoundException, DatabaseException {
+
+        Account account = new Account();
+
+        try (Connection connection = ConnectionUtil.getConnection()){
+            String sql = "SELECT * FROM accounts WHERE id=? AND client_id=?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, acctId);
+            pstmt.setInt(2, clientId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String type = rs.getNString("account_type");
+                int balance = rs.getInt("balance");
+
+
+                account = new Account(acctId, type, balance, clientId);
+            }
+
+            logger.info("Account with id: " + acctId + " found for Client with id: " + clientId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+
+
+    public Account updateAccountByIdForClientId(int acctId, int clientId, Account account) throws ClientNotFoundException,
+            AccountNotFoundException, DatabaseException {
+
+        try (Connection connection = ConnectionUtil.getConnection()){
+
+            String sql = "UPDATE accounts SET account_type=?, balance=? WHERE id=? AND client_id=?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, account.getType());
+            pstmt.setInt(2, account.getBalance());
+            pstmt.setInt(3, acctId);
+            pstmt.setInt(4, clientId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String type = rs.getNString("type");
+                int balance = rs.getInt("balance");
+
+                account = new Account(acctId, type, balance, clientId);
+
+            }
+
+            logger.info("Account with id: " + acctId + " found for Client with id: " + clientId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return account;
+
+    }
+
 
 }

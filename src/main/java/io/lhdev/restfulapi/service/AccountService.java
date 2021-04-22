@@ -47,12 +47,33 @@ public class AccountService {
 
     public Account addAccountByClientId(int clientId, Account account) throws DatabaseException, AccountCreationException,
             ClientNotFoundException {
+
         return  accountRepository.addAccountByClientId(clientId, account);
     }
 
     public List<Account> getAllAccountsByClientId(int clientId) throws DatabaseException, ClientNotFoundException,
             SQLException {
+
         return accountRepository.getAllAccountsByClientId(clientId);
+    }
+
+    public List<Account> getAllAccountsByClientIdWithBalance(int clientId, int X, int Y) throws DatabaseException,
+            ClientNotFoundException,
+            SQLException {
+
+        return accountRepository.getAllAccountsByClientIdWithBalance(clientId, X, Y);
+    }
+
+    public Account getAccountByIdForClientId(int acctId, int clientId) throws DatabaseException,
+            ClientNotFoundException,AccountNotFoundException {
+
+        return accountRepository.getAccountByIdForClientId(acctId, clientId);
+    }
+
+    public Account updateAccountByIdForClientId(int acctId, int clientId, Account account) throws DatabaseException,
+            ClientNotFoundException, AccountNotFoundException {
+
+        return accountRepository.updateAccountByIdForClientId(acctId, clientId, account);
     }
 }
 

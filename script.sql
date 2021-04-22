@@ -46,4 +46,18 @@ WHERE id = 1;
 SELECT * FROM accounts
 WHERE client_id = 10;
 
+-- getAllAccountsByClientIdBalance()
+SELECT * FROM accounts
+WHERE client_id = 2
+HAVING (balance < 2000 AND balance > 400);
+
+
+-- getAccountByIdForClientId
+SELECT * FROM accounts
+WHERE id=6791 AND client_id = 10;
+
+-- updateAccountByIdForClientId
+UPDATE accounts
+SET account_type="Savings", balance=10000
+WHERE id=5432 AND client_id = 1;
 
