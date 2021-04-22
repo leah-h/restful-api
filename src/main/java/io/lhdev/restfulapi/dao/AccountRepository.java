@@ -143,4 +143,35 @@ public class AccountRepository {
         return account;
     }
 
+    public List<Account> getAllAccountsByClientId(int clientId) throws ClientNotFoundException,
+            DatabaseException, SQLException {
+
+        List<Account> listOfAccounts = new ArrayList<>();
+
+        try (Connection connection = ConnectionUtil.getConnection()) {
+
+            String sql = "SELECT * FROM accounts WHERE client_id=?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, clientId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int accountId = rs.getInt("id");
+                String type = rs.getNString("account_type");
+                int balance = rs.getInt("balance");
+
+                Account account = new Account(accountId, type, balance, clientId);
+                listOfAccounts.add(account);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listOfAccounts;
+
+    }
+
 }

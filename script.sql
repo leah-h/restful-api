@@ -42,4 +42,8 @@ SELECT *
 FROM clients
 WHERE id = 1;
 
+-- getAllAccountsByClientId
+SELECT * FROM accounts
+WHERE client_id = 10;
+
 

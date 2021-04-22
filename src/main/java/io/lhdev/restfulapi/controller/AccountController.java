@@ -71,12 +71,23 @@ public class AccountController implements Controller{
         if (newAccountAdded.getId() != 0) {
             ctx.json(newAccountAdded);
         } else {
-            logger.info("Client with id: " + Integer.parseInt(id) + " does not exist");
-            ctx.result("Client does not exist");
+            logger.info("Client with id: " + Integer.parseInt(id) + " does not exist.");
+            ctx.result("Client does not exist.");
         }
-
-
     };
+
+    private Handler getAllAccountsByClientId = ctx -> {
+        String clientId = ctx.pathParam("id");
+
+        List<Account> listOfAccounts = accountService.getAllAccountsByClientId(Integer.parseInt(clientId));
+        if(!listOfAccounts.isEmpty()) {
+            ctx.json(listOfAccounts);
+        } else {
+            logger.info("Client with id: " + Integer.parseInt(clientId) + " does not exist.");
+            ctx.result("Client does not exist.");
+        }
+    };
+
 
     @Override
     public void mapEndpoints(Javalin app) {
@@ -85,5 +96,6 @@ public class AccountController implements Controller{
         app.delete("/accounts?:id", deleteAccountById);
         app.post("/accounts", addAccount);
         app.post("/clients/:id/accounts", addAccountByClientId);
+        app.get("/clients/:id/accounts", getAllAccountsByClientId);
     }
 }

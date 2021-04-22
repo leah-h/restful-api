@@ -12,6 +12,7 @@ import io.lhdev.restfulapi.dao.AccountRepository;
 import io.lhdev.restfulapi.model.Client;
 
 
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -49,6 +50,9 @@ public class AccountService {
         return  accountRepository.addAccountByClientId(clientId, account);
     }
 
-
+    public List<Account> getAllAccountsByClientId(int clientId) throws DatabaseException, ClientNotFoundException,
+            SQLException {
+        return accountRepository.getAllAccountsByClientId(clientId);
+    }
 }
 
