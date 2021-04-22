@@ -123,16 +123,40 @@ public class AccountController implements Controller{
 
         Account account = ctx.bodyAsClass(Account.class);
 
-        Account accountFound = accountService.updateAccountByIdForClientId(Integer.parseInt(acctId),
+        Account accountUpdated = accountService.updateAccountByIdForClientId(Integer.parseInt(acctId),
                 Integer.parseInt(clientId), account);
 
-        if( (accountFound.getId() == Integer.parseInt(acctId)) &
-                (accountFound.getClientId() == Integer.parseInt(clientId))) {
-            ctx.json(accountFound);
+        Account accountCheck = accountService.getAccountById(Integer.parseInt(acctId));
+
+        if ( accountCheck.getClientId() == Integer.parseInt(clientId)) {
+
+            ctx.result("Account successfully updated.");
+
         } else {
             logger.info("No such account for client");
             ctx.result("No such account for client.");
         }
+    };
+
+    private Handler deleteAccountByIdForClientId = ctx -> {
+        String acctId = ctx.pathParam("acctId");
+        String clientId = ctx.pathParam("clientId");
+
+        Account account = ctx.bodyAsClass(Account.class);
+
+        Account accountDeleted = accountService.deleteAccountByIdForClientId(Integer.parseInt(acctId),
+                Integer.parseInt(clientId), account);
+
+        if( (accountDeleted.getId() == Integer.parseInt(acctId)) &
+                (accountDeleted.getClientId() == Integer.parseInt(clientId))) {
+            ctx.result("The account has been deleted: ");
+            ctx.json(accountDeleted);
+        } else {
+            logger.info("No such account for client");
+            ctx.result("No such account for client.");
+        }
+
+
     };
 
 
@@ -147,5 +171,6 @@ public class AccountController implements Controller{
         app.get("/clients/:id/accounts?amountLessThan=X&amountGreaterThan=Y", getAllAccountsByClientIdWithBalance);
         app.get("/clients/:clientId/accounts/:acctId", getAccountByIdForClientId);
         app.put("/clients/:clientId/accounts/:acctId", updateAccountByIdForClientId);
+        app.delete("/clients/:clientId/accounts/:acctId", deleteAccountByIdForClientId);
     }
 }
