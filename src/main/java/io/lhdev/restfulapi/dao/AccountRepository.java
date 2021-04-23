@@ -178,7 +178,6 @@ public class AccountRepository {
 
     }
 
-// ! Check different output from db vs. postman
     public List<Account> getAllAccountsByClientIdWithBalance(int clientId, int X, int Y) throws ClientNotFoundException, DatabaseException,
             SQLException {
 

@@ -4,15 +4,12 @@ import io.javalin.Javalin;
 import io.javalin.http.Handler;
 import io.lhdev.restfulapi.model.Account;
 
-import io.lhdev.restfulapi.model.Client;
 import io.lhdev.restfulapi.service.AccountService;
 import io.lhdev.restfulapi.service.ClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.util.List;
-
 
 public class AccountController implements Controller{
 
@@ -31,7 +28,6 @@ public class AccountController implements Controller{
         List<Account> listOfAccounts = accountService.getAllAccounts();
         ctx.json(listOfAccounts);
     };
-
 
     private Handler getAccountById = ctx-> {
         String id = ctx.pathParam("id");
@@ -152,7 +148,6 @@ public class AccountController implements Controller{
 
             ctx.result("No such account for client.");
         }
-
 
     };
 

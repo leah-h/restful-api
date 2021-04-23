@@ -9,8 +9,6 @@ import io.lhdev.restfulapi.exceptions.DatabaseException;
 import io.lhdev.restfulapi.model.Account;
 
 import io.lhdev.restfulapi.dao.AccountRepository;
-import io.lhdev.restfulapi.model.Client;
-
 
 import java.sql.SQLException;
 import java.util.List;
