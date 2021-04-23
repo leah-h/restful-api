@@ -76,10 +76,9 @@ public class AccountService {
         return accountRepository.updateAccountByIdForClientId(acctId, clientId, account);
     }
 
-    public Account deleteAccountByIdForClientId(int acctId, int clientId, Account account) throws DatabaseException,
-            ClientNotFoundException, AccountNotFoundException {
+    public Account deleteAccountByIdForClientId(int acctId, int clientId) throws Exception {
 
-        return accountRepository.deleteAccountByIdForClientId(acctId, clientId, account);
+        return accountRepository.deleteAccountByIdForClientId(acctId, clientId);
     }
 }
 

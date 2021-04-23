@@ -56,10 +56,6 @@ public class AccountController implements Controller{
         ctx.json(insertedAccount);
     };
 
-    private Handler deleteAccountById = ctx -> {
-
-    };
-
     private Handler addAccountByClientId = ctx -> {
         String id = ctx.pathParam("id");
         Account account = ctx.bodyAsClass(Account.class);
@@ -112,7 +108,7 @@ public class AccountController implements Controller{
         if(accountFound.getId() != 0){
             ctx.json(accountFound);
         } else {
-            logger.info("No such account for client");
+
             ctx.result("No such account for client.");
         }
     };
@@ -130,10 +126,11 @@ public class AccountController implements Controller{
 
         if ( accountCheck.getClientId() == Integer.parseInt(clientId)) {
 
-            ctx.result("Account successfully updated.");
+            logger.info("Account successfully updated.");
+            ctx.json(accountUpdated);
 
         } else {
-            logger.info("No such account for client");
+
             ctx.result("No such account for client.");
         }
     };
@@ -142,17 +139,17 @@ public class AccountController implements Controller{
         String acctId = ctx.pathParam("acctId");
         String clientId = ctx.pathParam("clientId");
 
-        Account account = ctx.bodyAsClass(Account.class);
+        Account accountCheck = accountService.getAccountById(Integer.parseInt(acctId));
 
-        Account accountDeleted = accountService.deleteAccountByIdForClientId(Integer.parseInt(acctId),
-                Integer.parseInt(clientId), account);
+        if( accountCheck.getClientId() == Integer.parseInt(clientId)) {
 
-        if( (accountDeleted.getId() == Integer.parseInt(acctId)) &
-                (accountDeleted.getClientId() == Integer.parseInt(clientId))) {
-            ctx.result("The account has been deleted: ");
+            Account accountDeleted = accountService.deleteAccountByIdForClientId(Integer.parseInt(acctId),
+                    Integer.parseInt(clientId));
+
             ctx.json(accountDeleted);
+
         } else {
-            logger.info("No such account for client");
+
             ctx.result("No such account for client.");
         }
 
@@ -164,11 +161,11 @@ public class AccountController implements Controller{
     public void mapEndpoints(Javalin app) {
         app.get("/accounts", getAllAccounts);
         app.get("/accounts/:id", getAccountById);
-        app.delete("/accounts?:id", deleteAccountById);
         app.post("/accounts", addAccount);
         app.post("/clients/:id/accounts", addAccountByClientId);
         app.get("/clients/:id/accounts", getAllAccountsByClientId);
-        app.get("/clients/:id/accounts?amountLessThan=X&amountGreaterThan=Y", getAllAccountsByClientIdWithBalance);
+        app.get("/clients/:id/accounts?amountLessThan=X&amountGreaterThan=Y",
+                getAllAccountsByClientIdWithBalance);
         app.get("/clients/:clientId/accounts/:acctId", getAccountByIdForClientId);
         app.put("/clients/:clientId/accounts/:acctId", updateAccountByIdForClientId);
         app.delete("/clients/:clientId/accounts/:acctId", deleteAccountByIdForClientId);

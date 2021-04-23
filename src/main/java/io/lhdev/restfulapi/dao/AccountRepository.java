@@ -9,7 +9,6 @@ import io.lhdev.restfulapi.util.ConnectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.login.AccountException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -277,8 +276,10 @@ public class AccountRepository {
 
     }
 
-    public Account deleteAccountByIdForClientId(int acctId, int clientId, Account account) throws ClientNotFoundException,
+    public Account deleteAccountByIdForClientId(int acctId, int clientId) throws ClientNotFoundException,
             AccountNotFoundException, DatabaseException {
+
+        Account account = new Account();
 
         try (Connection connection = ConnectionUtil.getConnection()) {
 
@@ -291,7 +292,7 @@ public class AccountRepository {
             int deletedAccount = pstmt.executeUpdate();
 
             if (deletedAccount != 1){
-                throw new DatabaseException("Unable to add account to database");
+                throw new DatabaseException("Unable to delete account from database");
             }
 
         } catch (SQLException e) {
